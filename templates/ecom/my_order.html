@@ -1,0 +1,106 @@
+{% extends 'ecom/customer_base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    h6 {
+      text-align: center;
+    }
+    
+    .container {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .table {
+      margin-top: 20px;
+    }
+    
+    /* Make images smaller */
+    .img-sm {
+      max-width: 40px;
+      height: auto;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    
+    /* Styling for badges */
+    .badge {
+      font-size: 12px;
+      border-radius: 30px;
+      padding: 5px 10px;
+    }
+    
+    /* Optional: Style the download invoice button */
+    .btn-download {
+      font-size: 12px;
+      border-radius: 30px;
+      padding: 5px 10px;
+    }
+  </style>
+</head>
+
+<div class="container">
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <h6 class="panel-title" style="text-align:center;">My Orders / Tracking</h6>
+    </div>
+    <table class="table table-hover table-bordered" id="dev-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Shipment Address</th>
+          <th>Products</th>
+          <th>Status</th>
+          <th>Invoice</th>
+        </tr>
+      </thead>
+      {% for order, order_items, first_product_id in data %}
+      <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.address }}</td>
+        <td>
+          {% for order_item in order_items %}
+            {{ order_item.product.name }} (x{{ order_item.quantity }})<br>
+          {% endfor %}
+        </td>
+        <td>
+          {% if order.status == 'Pending' %}
+            <span class="badge bg-info">{{ order.status }}</span>
+          {% elif order.status == 'Delivered' %}
+            <span class="badge bg-success">{{ order.status }}</span>
+          {% elif order.status == 'Out for Delivery' %}
+            <span class="badge bg-warning">{{ order.status }}</span>
+          {% else %}
+            <span class="badge bg-primary">{{ order.status }}</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if first_product_id %}
+            <a href="{% url 'download-invoice' order.id first_product_id %}" class="btn btn-danger btn-xs btn-download">
+              <span class="glyphicon glyphicon-download"></span> Download Invoice
+            </a>
+          {% else %}
+            <span>No Invoice Available</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% endblock %}

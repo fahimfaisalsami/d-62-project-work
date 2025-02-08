@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+{% load static %}
+
+<head>
+  <meta charset="utf-8">
+  <style>
+    @page {
+      size: A4;
+      margin: 1cm;
+    }
+
+    .invoice-box {
+      max-width: 800px;
+      margin: auto;
+      padding: 30px;
+      border: 1px solid #eee;
+      box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+      font-size: 14px;
+      line-height: 20px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      color: #333;
+    }
+
+    .invoice-box table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .invoice-box table td {
+      padding: 10px;
+      vertical-align: middle;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .invoice-box table tr.heading td {
+      background: #f2f2f2;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    .invoice-box table tr.item td {
+      text-align: left;
+    }
+
+    .product-img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      margin-right: 10px;
+    }
+
+    .total-section {
+      font-size: 16px;
+      font-weight: bold;
+      text-align: right;
+      margin-top: 15px;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .invoice-box {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="invoice-box">
+    <table>
+      <!-- Order Information -->
+      <tr class="heading">
+        <td colspan="2">Order Details</td>
+      </tr>
+      <tr>
+        <td><strong>Order ID:</strong> {{ orderID }}</td>
+        <td><strong>Order Date:</strong> {{ orderDate }}</td>
+      </tr>
+      <tr>
+        <td><strong>Customer:</strong> {{ customerName }}</td>
+        <td><strong>Email:</strong> {{ customerEmail }}</td>
+      </tr>
+      <tr>
+        <td><strong>Contact:</strong> {{ customerMobile }}</td>
+        <td><strong>Shipment Address:</strong> {{ shipmentAddress }}</td>
+      </tr>
+      <tr>
+        <td colspan="2"><strong>Order Status:</strong> {{ orderStatus }}</td>
+      </tr>
+
+      <!-- Product List -->
+      <tr class="heading">
+        <td>Product</td>
+        <td>Price</td>
+      </tr>
+      
+      {% for product in products %}
+      <tr class="item">
+        <td>
+          <img src="{{ product.product_image }}" class="product-img" alt="Product Image">
+          {{ product.product_name }} x {{ product.product_quantity }}
+        </td>
+        <td>Taka {{ product.product_price }}</td>
+      </tr>
+      {% endfor %}
+
+      <!-- Total Price -->
+      <tr>
+        <td colspan="2" class="total-section">
+          Total: Taka {{ totalPrice }}
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+</body>
+</html>

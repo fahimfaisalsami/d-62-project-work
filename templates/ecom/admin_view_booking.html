@@ -1,0 +1,135 @@
+{% extends 'ecom/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+
+    /* Add some spacing between rows */
+    .table th, .table td {
+      padding: 15px;
+    }
+
+    /* Styling for the action buttons (Edit and Delete) */
+    .actions a {
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-right: 10px;
+      display: inline-flex;
+      align-items: center;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    .actions .edit {
+      background-color: #4CAF50; /* Green for edit */
+    }
+
+    .actions .edit:hover {
+      background-color: #45a049; /* Darker green on hover */
+    }
+
+    .actions .delete {
+      background-color: #f44336; /* Red for delete */
+    }
+
+    .actions .delete:hover {
+      background-color: #da190b; /* Darker red on hover */
+    }
+
+    /* Icon styling */
+    .actions .glyphicon {
+      margin-right: 5px;
+    }
+
+    .product-img {
+      height: 40px;
+      width: 40px;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+
+    .ordered-products {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .ordered-products div {
+      margin-right: 20px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<div class="container">
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <h6 class="panel-title">Total Orders</h6>
+    </div>
+    <table class="table table-hover table-bordered" id="dev-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Customer</th>
+          <th>Contact</th>
+          <th>Shipping Address</th>
+          <th>Products</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      {% for order_info in data %}
+      <tr>
+        <td>{{ order_info.order.id }}</td>
+        <td>{{ order_info.order.customer.get_name }}</td>
+        <td>{{ order_info.order.mobile }}</td>
+        <td>{{ order_info.order.address }}</td>
+        <td>
+          <div class="ordered-products">
+            {% for order_item in order_info.ordered_products %}
+              <div>
+                <p>{{ order_item.product_name }} (x{{ order_item.quantity }}) - ID: {{ order_item.product_id }}</p>
+                <img src="{% static order_item.product_image %}" alt="{{ order_item.product_name }}" class="product-img">
+              </div>
+            {% endfor %}
+          </div>
+        </td>
+        
+        <td>{{ order_info.order.status }}</td>
+        <td class="actions">
+          <a class="btn btn-primary btn-xs" href="{% url 'update-order' order_info.order.id %}">
+            <span class="glyphicon glyphicon-edit"></span>
+          </a>
+          <a class="btn btn-danger btn-xs" href="{% url 'delete-order' order_info.order.id %}" onclick="return confirm('Are you sure you want to delete this product?');" title="Delete Product">
+            <span class="glyphicon glyphicon-trash"></span>
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% endblock content %}
+

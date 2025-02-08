@@ -1,0 +1,136 @@
+{% extends 'ecom/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+
+    .float {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      bottom: 60px;
+      right: 60px;
+      background-color: #3eb54d;
+      color: #FFF;
+      border-radius: 50px;
+      text-align: center;
+      box-shadow: 5px 5px 5px #505050;
+    }
+
+    .my-float {
+      margin-top: 22px;
+    }
+
+    .actions a {
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-right: 10px;
+      display: inline-flex;
+      align-items: center;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    .actions .edit {
+      background-color: #4CAF50;
+    }
+
+    .actions .edit:hover {
+      background-color: #45a049;
+    }
+
+    .actions .delete {
+      background-color: #f44336;
+    }
+
+    .actions .delete:hover {
+      background-color: #da190b;
+    }
+
+    .actions .glyphicon {
+      margin-right: 5px;
+    }
+  </style>
+
+</head>
+
+<div class="container">
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <h6 class="panel-title">Total Products</h6>
+    </div>
+    <table class="table table-hover table-bordered" id="dev-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Image</th>
+          <th>Price</th>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Weather tag</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      {% for p in products %}
+        {% if p %}
+        <tr>
+          <td>{{ p.id }}</td>
+          <td>{{ p.name }}</td>
+          <td>
+            {% if p.product_image %}
+              <img src="{% static p.product_image.url %}" alt="Product Image" height="80px" width="80px" />
+            {% else %}
+              <span>No Image</span>
+            {% endif %}
+          </td>
+          <td>{{ p.price }}</td>
+          <td>{{ p.description }}</td>
+          <td>{{ p.category }}</td>
+          <td>{{ p.weather_tag }}</td>
+          <td class="actions">
+            <a href="{% url 'update-product' p.id %}" class="edit" title="Edit Product">
+                <span class="glyphicon glyphicon-edit"></span> Edit
+            </a>
+            <a href="{% url 'delete-product' p.id %}" class="delete" 
+               onclick="return confirm('Are you sure you want to delete this product?');" title="Delete Product">
+                <span class="glyphicon glyphicon-trash"></span> Delete
+            </a>
+          </td>
+        </tr>
+        {% else %}
+          <br><br><br>
+          <h1>No Products!!</h1>
+        {% endif %}
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+<a href="/admin-add-product" class="float">
+  <i class="fa fa-plus my-float"></i>
+</a>
+
+{% endblock content %}

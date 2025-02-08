@@ -1,0 +1,55 @@
+{% extends 'ecom/admin_base.html' %}
+{% load static %}
+{% block content %}
+<br>
+{% include 'ecom/admin_dashboard_cards.html' %}
+<br><br><br><br><br>
+
+<hr><hr>
+<div class="container" >
+
+    <div class="panel panel-danger" >
+      <div class="panel-heading" style="text-align:center;">
+        <h6 class="panel-title">Recent Booking</h6>
+      </div>
+      <table class="table table-hover table-bordered" id="dev-table">
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Contact</th>
+            <th>Shipment Address</th>
+            <th>Products</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        {% for data in data %}
+        <tr>
+          <td>{{ data.customer.get_name }}</td>
+          <td>{{ data.customer.mobile }}</td>
+          <td>{{ data.order.address }}</td>
+
+          <td>
+            <div class="ordered-products">
+              {% for product in data.ordered_products %}
+                <p>{{ product.product.name }} (x{{ product.quantity }})</p>
+              {% endfor %}
+            </div>
+          </td>
+
+          {% if data.order.status == 'Pending' %}
+          <td><span class="label label-info">{{ data.order.status }}</span></td>
+          {% elif data.order.status == 'Delivered' %}
+          <td><span class="label label-success">{{ data.order.status }}</span></td>
+          {% elif data.order.status == 'Out for Delivery' %}
+          <td><span class="label label-warning">{{ data.order.status }}</span></td>
+          {% else %}
+            <td><span class="label label-primary">{{ data.order.status }}</span></td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </table>
+
+  </div>
+</div>
+
+{% endblock content %}
